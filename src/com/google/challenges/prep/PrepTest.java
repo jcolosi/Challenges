@@ -79,25 +79,32 @@ public class PrepTest {
 
 	@Test
 	public void testIP() {
-		DataStore<String> store = new DataStore<String>();
+		DataStore<IP> store = new DataStore<IP>();
 		for (int i = 0; i < 10; i++) {
-			store.add(getRandomIP());
+			store.add(IP.getRandom(), IP.getRandom());
 		}
-		showString(store.index(0).values());
-		showString(store.index(0, true).values());
+		showIP(store.index(0).values());
+		showIP(store.index(1, true).values());
 	}
 
-	private String getRandomIP() {
-		StringBuilder out = new StringBuilder();
-		for (int i = 0; i < 4; i++) {
-			if (i > 0) out.append(".");
-			out.append((int) (Math.random() * 256));
-		}
-		return out.toString();
-	}
+	// private IP getRandomIP() {
+	// StringBuilder out = new StringBuilder();
+	// for (int i = 0; i < 4; i++) {
+	// if (i > 0) out.append(".");
+	// out.append((int) (Math.random() * 256));
+	// }
+	// return out.toString();
+	// }
 
 	private void showString(Collection<DataRecord<String>> list) {
 		for (DataRecord<String> record : list) {
+			System.out.println(record);
+		}
+		System.out.println();
+	}
+
+	private void showIP(Collection<DataRecord<IP>> list) {
+		for (DataRecord<IP> record : list) {
 			System.out.println(record);
 		}
 		System.out.println();
@@ -117,4 +124,36 @@ public class PrepTest {
 		System.out.println();
 	}
 
+}
+
+class IP implements Comparable<IP> {
+	public char a, b, c, d;
+
+	public IP(char a, char b, char c, char d) {
+		this.a = a;
+		this.b = b;
+		this.c = c;
+		this.d = d;
+	}
+
+	static public IP getRandom() {
+		char a = (char) (Math.random() * 256);
+		char b = (char) (Math.random() * 256);
+		char c = (char) (Math.random() * 256);
+		char d = (char) (Math.random() * 256);
+		return new IP(a, b, c, d);
+	}
+
+	public String toString() {
+		return String.format("%d.%d.%d.%d", (int) a, (int) b, (int) c, (int) d);
+	}
+
+	@Override
+	public int compareTo(IP other) {
+		if (other.a != this.a) return this.a - other.a;
+		if (other.b != this.b) return this.b - other.b;
+		if (other.c != this.c) return this.c - other.c;
+		if (other.d != this.d) return this.d - other.d;
+		return 0;
+	}
 }
