@@ -1,125 +1,69 @@
 package com.google.challenges;
 
+import java.math.BigInteger;
+
 public class Answer {
+	static private final BigInteger ONE = new BigInteger("1");
+	static private final BigInteger THREE = new BigInteger("3");
+	static private final BigInteger FOUR = new BigInteger("4");
 
-	static private Cell[][] cells;
-	static private Cell exit = null;
-
-	public static int answer(int[][] maze) {
-		initCells(maze);
-		linkCells(maze);
-		cells[0][0].hello();
-		// System.out.println(exit.best);
-		return exit.best;
-	}
-
-	static private void initCells(int[][] maze) {
-		int rows = maze.length;
-		int columns = maze[0].length;
-		cells = new Cell[rows][columns];
-		for (int row = 0; row < rows; row++) {
-			for (int col = 0; col < columns; col++) {
-				cells[row][col] = new Cell();
-			}
-		}
-		exit = cells[rows - 1][columns - 1];
-	}
-
-	static private void linkCells(int[][] maze) {
-		int rows = maze.length;
-		int cols = maze[0].length;
-		for (int row = 0; row < rows; row++) {
-			for (int col = 0; col < cols; col++) {
-				cells[row][col].wall = maze[row][col] == 1;
-				cells[row][col].up = row == 0 ? null : cells[row - 1][col];
-				cells[row][col].left = col == 0 ? null : cells[row][col - 1];
-				cells[row][col].down = row == (rows - 1) ? null : cells[row + 1][col];
-				cells[row][col].right = col == (cols - 1) ? null : cells[row][col + 1];
-			}
-		}
-	}
-}
-
-class Cell {
-
-	static final int UP = 0;
-	static final int LEFT = 1;
-	static final int DOWN = 2;
-	static final int RIGHT = 3;
-
-	public boolean wall;
-	public Integer best = null;
-	public Integer bestWithoutWall = null;
-	public Integer bestWithWall = null;
-
-	public Cell up;
-	public Cell left;
-	public Cell down;
-	public Cell right;
-
-	public void hello() {
-		hello(0, null, UP);
-	}
-
-	public void hello(final Integer myBestWithoutWall, final Integer myBestWithWall, final int from) {
-		boolean changed = false;
-		if (wall == false) {
-			if (myBestWithoutWall != null) {
-				changed |= updateBestWithoutWall(myBestWithoutWall + 1);
-			}
-			if (myBestWithWall != null) {
-				changed |= updateBestWithWall(myBestWithWall + 1);
-			}
-		} else {
-			this.bestWithoutWall = null;
-			if (myBestWithoutWall != null) {
-				changed |= updateBestWithWall(myBestWithoutWall + 1);
-			}
-		}
-
-		if (changed) {
-			if (from == UP) {
-				if (left != null) left.hello(bestWithoutWall, bestWithWall, RIGHT);
-				if (down != null) down.hello(bestWithoutWall, bestWithWall, UP);
-				if (right != null) right.hello(bestWithoutWall, bestWithWall, LEFT);
-			} else if (from == LEFT) {
-				if (up != null) up.hello(bestWithoutWall, bestWithWall, DOWN);
-				if (down != null) down.hello(bestWithoutWall, bestWithWall, UP);
-				if (right != null) right.hello(bestWithoutWall, bestWithWall, LEFT);
-			} else if (from == DOWN) {
-				if (up != null) up.hello(bestWithoutWall, bestWithWall, DOWN);
-				if (left != null) left.hello(bestWithoutWall, bestWithWall, RIGHT);
-				if (right != null) right.hello(bestWithoutWall, bestWithWall, LEFT);
-			} else if (from == RIGHT) {
-				if (up != null) up.hello(bestWithoutWall, bestWithWall, DOWN);
-				if (left != null) left.hello(bestWithoutWall, bestWithWall, RIGHT);
-				if (down != null) down.hello(bestWithoutWall, bestWithWall, UP);
+	public static int answer(String n) {
+		BigInteger number = new BigInteger(n);
+		int count = 0;
+		while (true) {
+			// show(count, number);
+			if (number.compareTo(THREE) == 0 || number.compareTo(FOUR) == 0)
+				return count + 2;
+			if (!number.testBit(0)) {
+				number = number.shiftRight(1);
+				count++;
+			} else {
+				if (number.testBit(1)) {
+					number = number.add(ONE);
+					count++;
+				} else {
+					number = number.clearBit(0);
+					count++;
+				}
 			}
 		}
 	}
 
-	private boolean updateBestWithoutWall(int newBestWithoutWall) {
-		if (bestWithoutWall == null || bestWithoutWall > newBestWithoutWall) {
-			this.bestWithoutWall = newBestWithoutWall;
-			updateBest(this.bestWithoutWall);
-			if (this.bestWithWall != null && this.bestWithoutWall <= this.bestWithWall) this.bestWithWall = null;
-			return true;
+	public static int answer2(String n) {
+		char[] array = new BigInteger(n).toString(2).toCharArray();
+		int count = 0;
+		for (char ch : array) {
+			if (ch == '1') count++;
+			else count += 2;
 		}
-		return false;
+		return count;
 	}
 
-	private boolean updateBestWithWall(int newBestWithWall) {
-		if ((bestWithoutWall == null || bestWithoutWall > newBestWithWall)
-				&& (bestWithWall == null || bestWithWall > newBestWithWall)) {
-			this.bestWithWall = newBestWithWall;
-			updateBest(this.bestWithWall);
-			return true;
+	public static int answer3(String n) {
+		String input = new BigInteger(n).toString(2);
+		int count = 0;
+
+		count += input.length() - 1;
+		String[] groups = input.split("0+");
+		System.out.println(">>> " + input + " : " + toString(groups));
+		for (String group : groups) {
+			if (group.length() > 0) count++;
 		}
-		return false;
+		if (input.indexOf('0') == -1) count++;
+		return count;
 	}
 
-	private void updateBest(int value) {
-		if (best == null || best > value) best = value;
+	static private String toString(String[] x) {
+		StringBuffer out = new StringBuffer();
+		for (String z : x) {
+			out.append("[" + z + "]");
+		}
+		return out.toString();
+	}
+
+	static public void show(int count, BigInteger number) {
+		System.out.format("%d: %s (%s)%n", count, number.toString(2),
+				number.toString());
 	}
 
 }
