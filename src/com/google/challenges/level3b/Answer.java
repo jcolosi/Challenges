@@ -61,7 +61,8 @@ class Cell {
 		hello(0, null, UP);
 	}
 
-	public void hello(final Integer myBestWithoutWall, final Integer myBestWithWall, final int from) {
+	public void hello(final Integer myBestWithoutWall,
+			final Integer myBestWithWall, final int from) {
 		boolean changed = false;
 		if (wall == false) {
 			if (myBestWithoutWall != null) {
@@ -102,7 +103,9 @@ class Cell {
 		if (bestWithoutWall == null || bestWithoutWall > newBestWithoutWall) {
 			this.bestWithoutWall = newBestWithoutWall;
 			updateBest(this.bestWithoutWall);
-			if (this.bestWithWall != null && this.bestWithoutWall <= this.bestWithWall) this.bestWithWall = null;
+			if (this.bestWithWall != null
+					&& this.bestWithoutWall <= this.bestWithWall)
+				this.bestWithWall = null;
 			return true;
 		}
 		return false;
