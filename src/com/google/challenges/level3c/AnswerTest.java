@@ -1,4 +1,4 @@
-package com.google.challenges;
+package com.google.challenges.level3c;
 
 import java.util.ArrayList;
 

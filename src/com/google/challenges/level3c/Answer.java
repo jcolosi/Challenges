@@ -1,11 +1,8 @@
-package com.google.challenges;
+package com.google.challenges.level3c;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
 
-/**
- * I guess "Error(400): Bad Request" means "write your own BigInteger"... okay
- */
 public class Answer {
 
 	public static int answer(String n) {
