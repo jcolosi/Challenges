@@ -12,8 +12,7 @@ public class Answer {
 		int count = 0;
 		while (true) {
 			// show(count, number);
-			if (number.compareTo(THREE) == 0 || number.compareTo(FOUR) == 0)
-				return count + 2;
+			if (number.compareTo(THREE) == 0 || number.compareTo(FOUR) == 0) return count + 2;
 			if (!number.testBit(0)) {
 				number = number.shiftRight(1);
 				count++;
@@ -45,11 +44,36 @@ public class Answer {
 
 		count += input.length() - 1;
 		String[] groups = input.split("0+");
-		System.out.println(">>> " + input + " : " + toString(groups));
+		// System.out.println(">>> " + input + " : " + toString(groups));
 		for (String group : groups) {
 			if (group.length() > 0) count++;
 		}
 		if (input.indexOf('0') == -1) count++;
+		return count;
+	}
+
+	public static int answer4(String n) {
+		String input = new BigInteger(n).toString(2);
+		StringBuffer buffer = new StringBuffer(input);
+		char[] binary = buffer.reverse().toString().toCharArray();
+		int len = binary.length;
+		int count = 0;
+
+		boolean powerFlag = false;
+		for (int i = 0; i < len - 1; i++) {
+			if (binary[i] == '0') {
+				if (powerFlag) {
+					count++;
+					powerFlag = false;
+				}
+				count++;
+			} else {
+				if (!powerFlag && binary[i + 1] == '1') {
+					powerFlag = true;
+				}
+				count++;
+			}
+		}
 		return count;
 	}
 
@@ -62,8 +86,7 @@ public class Answer {
 	}
 
 	static public void show(int count, BigInteger number) {
-		System.out.format("%d: %s (%s)%n", count, number.toString(2),
-				number.toString());
+		System.out.format("%d: %s (%s)%n", count, number.toString(2), number.toString());
 	}
 
 }
